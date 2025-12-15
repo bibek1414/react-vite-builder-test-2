@@ -1,5 +1,3 @@
-import { createApp } from '../server.js'
-
-const app = await createApp()
+import { app } from '../server.js'
 
 export default app
