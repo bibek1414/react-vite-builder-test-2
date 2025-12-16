@@ -6,7 +6,6 @@ export function render(_url: string) {
   const html = renderToString(
     <StrictMode>
       <App />
-      
     </StrictMode>,
   )
   return { html }
