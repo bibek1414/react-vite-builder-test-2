@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node startServer.js",
+    "start": "cross-env NODE_ENV=production node startServer.js",
     "build": "pnpm build:client && pnpm build:server",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
