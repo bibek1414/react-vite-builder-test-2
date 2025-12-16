@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url'
 
 export const app = express()
 
+// Helper variables for path resolution in ES modules
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -12,7 +13,7 @@ const isProd = process.env.NODE_ENV === 'production'
 const root = process.cwd()
 
 if (!isProd) {
-    // DEV MODE: Use Vite middleware
+    // DEV MODE: Use Vite middleware (UNMODIFIED)
     const vite = await (await import('vite')).createServer({
         server: { middlewareMode: true },
         appType: 'custom'
@@ -25,7 +26,7 @@ if (!isProd) {
         const url = req.originalUrl
 
         try {
-            // 1. Read index.html
+            // 1. Read index.html (source)
             let template = fs.readFileSync(
                 path.resolve(root, 'index.html'),
                 'utf-8',
@@ -41,7 +42,7 @@ if (!isProd) {
             const { html: appHtml } = await render(url)
 
             // 5. Inject the app-rendered HTML into the template
-            const html = template.replace('<!--app-html-->', appHtml)
+            const html = template.replace('', appHtml)
 
             // 6. Send the rendered HTML back
             res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
@@ -52,7 +53,7 @@ if (!isProd) {
         }
     })
 } else {
-    // PROD MODE: Serve built assets
+    // PROD MODE: Serve built assets and perform SSR (CORRECTED)
     const clientDist = path.resolve(__dirname, 'dist/client')
     const serverDist = path.resolve(__dirname, 'dist/server')
 
@@ -66,13 +67,15 @@ if (!isProd) {
                 'utf-8',
             )
 
+            // FIX 1: Correct path to the built entry-server.js
             const { render } = await import(
-                path.join(serverDist, '/src/entry-server.tsx')
+                path.join(serverDist, 'entry-server.js')
             )
 
             const { html: appHtml } = render(req.originalUrl)
 
-            const html = template.replace('<!--app-html-->', appHtml)
+            // FIX 2: Replace the empty root div, as the placeholder is removed in the build
+            const html = template.replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`)
 
             res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
         } catch (e) {
