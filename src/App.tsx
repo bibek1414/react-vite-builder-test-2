@@ -1,21 +1,29 @@
-function App({ initialData = {} }: { initialData?: any }) {
-  const {
-    page,
-    products = [],
-    product = null,
-    error = null,
-  } = initialData;
+import "./App.css";
+import { useEffect, useState } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
+function Header() {
+  return (
+    <header className="page-header">
+      ...
+    </header>
+  );
+}
+
+// Define ProductPage, ProductsPage, State, ProductDetail, ProductGrid, etc.
+
+function App({ initialData }) {
   return (
     <main className="page">
+      <Header />
       <Routes>
         <Route path="/" element={<Navigate to="/products" replace />} />
         <Route
           path="/products"
           element={
             <ProductsPage
-              initialProducts={products}
-              initialError={page === "list" ? error : null}
+              initialProducts={initialData.products}
+              initialError={initialData.page === "list" ? initialData.error : null}
             />
           }
         />
@@ -23,8 +31,8 @@ function App({ initialData = {} }: { initialData?: any }) {
           path="/products/:id"
           element={
             <ProductPage
-              initialProduct={page === "detail" ? product : null}
-              initialError={page === "detail" ? error : null}
+              initialProduct={initialData.page === "detail" ? initialData.product : null}
+              initialError={initialData.page === "detail" ? initialData.error : null}
             />
           }
         />
@@ -41,4 +49,5 @@ function App({ initialData = {} }: { initialData?: any }) {
     </main>
   );
 }
+
 export default App;
