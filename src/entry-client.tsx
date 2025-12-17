@@ -1,6 +1,6 @@
 import "./index.css";
 import { StrictMode } from "react";
-import { hydrateRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 
@@ -17,11 +17,24 @@ const initialData = window.__INITIAL_DATA__ ?? {
   error: null,
 };
 
-hydrateRoot(
-  document.getElementById("root")!,
-  <StrictMode>
-    <BrowserRouter>
-      <App initialData={initialData} />
-    </BrowserRouter>
-  </StrictMode>
-);
+const rootElement = document.getElementById("root")!;
+
+// In production, hydrate SSR content. In development, render fresh (CSR only)
+if (import.meta.env.PROD && window.__INITIAL_DATA__) {
+  hydrateRoot(
+    rootElement,
+    <StrictMode>
+      <BrowserRouter>
+        <App initialData={initialData} />
+      </BrowserRouter>
+    </StrictMode>
+  );
+} else {
+  createRoot(rootElement).render(
+    <StrictMode>
+      <BrowserRouter>
+        <App initialData={initialData} />
+      </BrowserRouter>
+    </StrictMode>
+  );
+}

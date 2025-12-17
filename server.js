@@ -33,24 +33,28 @@ app.use(async (req, res, next) => {
     try {
         const url = req.originalUrl.replace(base, '/')
 
-        let template, render
+        let template
         if (!isProd) {
+            // Development: Skip SSR, serve empty shell for client-side rendering
             template = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8')
             template = await vite.transformIndexHtml(url, template)
-            render = (await vite.ssrLoadModule('/src/entry-server.jsx')).render
+
+            // Send template without SSR - client will fetch data
+            res.status(200).set({ 'Content-Type': 'text/html' }).end(template)
         } else {
+            // Production: Full SSR with data injection
             template = fs.readFileSync(path.resolve(__dirname, 'dist/client/index.html'), 'utf-8')
-            render = (await import('./dist/server/entry-server.js')).render
+            const render = (await import('./dist/server/entry-server.js')).render
+
+            const { html: appHtml, head } = await render(url)
+
+            let html = template.replace(`<!--ssr-outlet-->`, appHtml)
+            if (head) {
+                html = html.replace(`<!--ssr-head-->`, head)
+            }
+
+            res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
         }
-
-        const { html: appHtml, head } = await render(url)
-
-        let html = template.replace(`<!--ssr-outlet-->`, appHtml)
-        if (head) {
-            html = html.replace(`<!--ssr-head-->`, head)
-        }
-
-        res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
     } catch (e) {
         vite?.ssrFixStacktrace(e)
         console.log(e.stack)
