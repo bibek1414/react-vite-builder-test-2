@@ -51,7 +51,9 @@ export async function render(_url) {
 
   const appHtml = renderToString(
     <StrictMode>
-      <App initialData={initialData} />
+      <StaticRouter location={url.pathname}>
+        <App initialData={initialData} />
+      </StaticRouter>
     </StrictMode>
   );
 
