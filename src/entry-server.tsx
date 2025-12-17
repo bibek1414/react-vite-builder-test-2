@@ -1,6 +1,5 @@
 import { StrictMode } from "react";
 import { renderToString } from "react-dom/server";
-import { StaticRouter } from "react-router-dom";
 import App from "./App";
 import { API_BASE, fetchProduct, fetchProducts } from "./services/api";
 
@@ -52,9 +51,12 @@ export async function render(_url) {
 
   const appHtml = renderToString(
     <StrictMode>
-      <StaticRouter location={url.pathname}>
-        <App initialData={initialData} />
-      </StaticRouter>
+      <App
+        page={initialData.page}
+        products={initialData.products}
+        product={initialData.product}
+        error={initialData.error}
+      />
     </StrictMode>
   );
 
