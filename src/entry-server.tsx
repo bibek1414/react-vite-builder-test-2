@@ -75,7 +75,7 @@ export async function render(_url) {
   const head = `
     <title>${title}</title>
     <meta name="description" content="${description}" />
-    <link rel="prefetch" href="${API_BASE}/products?limit=12" as="fetch" crossorigin="anonymous" />
+
     <script>window.__INITIAL_DATA__ = ${safeInitialData};</script>
   `;
 

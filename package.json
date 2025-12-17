@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "node start-server.js",
-    "build:client": "vite build --outDir dist/client --ssrManifest",
-    "build:server": "vite build --outDir dist/server --ssr src/entry-server.jsx",
-    "build": "npm run build:client && npm run build:server",
+    "build:client": "cross-env NODE_ENV=production vite build --outDir dist/client --ssrManifest",
+    "build:server": "cross-env NODE_ENV=production vite build --outDir dist/server --ssr src/entry-server.tsx",
+    "build": "pnpm run build:client && pnpm run build:server",
     "preview": "cross-env NODE_ENV=production node start-server.js",
     "lint": "eslint ."
   },
