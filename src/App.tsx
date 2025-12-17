@@ -8,7 +8,6 @@ function App({ initialData = {} }: { initialData?: any }) {
 
   return (
     <main className="page">
-      <Header />
       <Routes>
         <Route path="/" element={<Navigate to="/products" replace />} />
         <Route
