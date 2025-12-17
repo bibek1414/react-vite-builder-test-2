@@ -1,19 +1,17 @@
-import type { ProductsApiResponse } from '../types/types';
+const API_BASE = "https://dummyjson.com";
 
-const API_BASE_URL = 'https://glow.nepdora.baliyoventures.com/api';
-
-export async function fetchProducts(): Promise<ProductsApiResponse> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/product/`);
-    
-    if (!response.ok) {
-      throw new Error(`Failed to fetch products: ${response.statusText}`);
-    }
-    
-    const data: ProductsApiResponse = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    throw error;
-  }
+export async function fetchProducts(limit = 12) {
+  const response = await fetch(`${API_BASE}/products?limit=${limit}`);
+  if (!response.ok)
+    throw new Error(`Failed products fetch: ${response.status}`);
+  const payload = await response.json();
+  return payload.products ?? [];
 }
+
+export async function fetchProduct(id = "1") {
+  const response = await fetch(`${API_BASE}/products/${id}`);
+  if (!response.ok) throw new Error(`Failed product fetch: ${response.status}`);
+  return response.json();
+}
+
+export { API_BASE };

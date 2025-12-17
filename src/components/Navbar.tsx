@@ -1,28 +1,28 @@
-import { Link } from 'react-router-dom';
+
 import './Navbar.css';
 
 export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-logo">
+        <a to="/" className="navbar-logo">
           Glow Store
-        </Link>
+        </a>
         <ul className="navbar-menu">
           <li className="navbar-item">
-            <Link to="/" className="navbar-link">
+            <a to="/" className="navbar-a">
               Home
-            </Link>
+            </a>
           </li>
           <li className="navbar-item">
-            <Link to="/about" className="navbar-link">
+            <a to="/about" className="navbar-a">
               About
-            </Link>
+            </a>
           </li>
           <li className="navbar-item">
-            <Link to="/products" className="navbar-link">
+            <a to="/products" className="navbar-a">
               Products
-            </Link>
+            </a>
           </li>
         </ul>
       </div>
