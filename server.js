@@ -43,9 +43,12 @@ app.use(async (req, res, next) => {
             render = (await import('./dist/server/entry-server.js')).render
         }
 
-        const { html: appHtml } = await render(url)
+        const { html: appHtml, head } = await render(url)
 
-        const html = template.replace(`<!--ssr-outlet-->`, appHtml)
+        let html = template.replace(`<!--ssr-outlet-->`, appHtml)
+        if (head) {
+            html = html.replace(`<!--ssr-head-->`, head)
+        }
 
         res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
     } catch (e) {
