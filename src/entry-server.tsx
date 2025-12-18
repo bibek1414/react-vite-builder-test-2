@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { renderToString } from "react-dom/server";
 import App from "./App";
-import { API_BASE, fetchProduct, fetchProducts } from "./services/api";
+import {  fetchProduct, fetchProducts } from "./services/api";
 import { StaticRouter } from "react-router-dom";
 
 /**
